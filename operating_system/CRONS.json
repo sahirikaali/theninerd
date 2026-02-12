@@ -1,0 +1,9 @@
+[
+  {
+    "name": "ping",
+    "schedule": "*/1 * * * *",
+    "type": "command",
+    "command": "echo \"pong!\"",
+    "enabled": true
+  }
+]
