@@ -13,7 +13,7 @@ async function executeAction(action, opts = {}) {
   const type = action.type || 'agent';
 
   if (type === 'command') {
-    const { stdout, stderr } = await execAsync(action.command, { cwd: opts.cwd });
+    const { stdout, stderr } = await execAsync(action.command, { cwd: opts.cwd, shell: true });
     return (stdout || stderr || '').trim();
   }
 
