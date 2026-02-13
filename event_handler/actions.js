@@ -1,5 +1,6 @@
 const { exec } = require('child_process');
 const { promisify } = require('util');
+const fs = require('fs');
 const execAsync = promisify(exec);
 const { createJob } = require('./tools/create-job');
 
@@ -13,7 +14,12 @@ async function executeAction(action, opts = {}) {
   const type = action.type || 'agent';
 
   if (type === 'command') {
-    const { stdout, stderr } = await execAsync(action.command, { cwd: opts.cwd, shell: true });
+    // Ensure cwd exists (missing cwd causes misleading "spawn /bin/sh ENOENT")
+    const cwd = opts.cwd;
+    if (cwd && !fs.existsSync(cwd)) {
+      fs.mkdirSync(cwd, { recursive: true });
+    }
+    const { stdout, stderr } = await execAsync(action.command, { cwd });
     return (stdout || stderr || '').trim();
   }
 
